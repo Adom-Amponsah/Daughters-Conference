@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Users, Target, TrendingUp } from 'lucide-react';
-import RegistrationCard from './RegistrationCard';
+// import { Users, Target, TrendingUp } from 'lucide-react';
+// import RegistrationCard from './RegistrationCard';
 import EventRegistrationCards from './EventCard';
 
 const ArchCarousel: React.FC = () => {
@@ -14,16 +14,16 @@ const ArchCarousel: React.FC = () => {
 const animationRef = useRef<number>(0);  
   // Team member images
   const teamMembers = [
-    { id: 1, image: 'https://i.postimg.cc/JzmjVGpW/Whats-App-Image-2025-10-22-at-4-23-49-PM.jpg', name: 'Sarah Johnson' },
-    { id: 2, image: 'https://i.postimg.cc/Dy5w002S/Whats-App-Image-2025-10-22-at-4-23-49-PM-1.jpg', name: 'Michael Chen' },
-    { id: 3, image: 'https://i.postimg.cc/LsjdqQzk/Whats-App-Image-2025-10-22-at-4-23-49-PM-2.jpg', name: 'Emily Rodriguez' },
-    { id: 4, image: 'https://i.postimg.cc/5NyZ52B8/Whats-App-Image-2025-10-22-at-4-23-50-PM.jpg', name: 'David Kim' },
-    { id: 5, image: 'https://i.postimg.cc/qR7LfzMG/Whats-App-Image-2025-10-22-at-4-31-03-PM.jpg', name: 'Jessica Taylor' },
-    { id: 6, image: 'https://i.postimg.cc/JzmjVGpW/Whats-App-Image-2025-10-22-at-4-23-49-PM.jpg', name: 'James Wilson' },
-    { id: 7, image: 'https://i.postimg.cc/Dy5w002S/Whats-App-Image-2025-10-22-at-4-23-49-PM-1.jpg', name: 'Amanda Lee' },
-    { id: 8, image: 'https://i.postimg.cc/LsjdqQzk/Whats-App-Image-2025-10-22-at-4-23-49-PM-2.jpg', name: 'Ryan Martinez' },
-    { id: 9, image: 'https://i.postimg.cc/5NyZ52B8/Whats-App-Image-2025-10-22-at-4-23-50-PM.jpg', name: 'Nicole Brown' },
-    { id: 10, image: 'https://i.postimg.cc/qR7LfzMG/Whats-App-Image-2025-10-22-at-4-31-03-PM.jpg', name: 'Alex Turner' },
+    { id: 1, image: 'https://i.postimg.cc/JzmjVGpW/Whats-App-Image-2025-10-22-at-4-23-49-PM.jpg', name: 'Rev. Lady Adjoa Abrefi' },
+    { id: 2, image: 'https://i.postimg.cc/Dy5w002S/Whats-App-Image-2025-10-22-at-4-23-49-PM-1.jpg', name: 'Dr. Jayne Banful' },
+    { id: 3, image: 'https://i.postimg.cc/LsjdqQzk/Whats-App-Image-2025-10-22-at-4-23-49-PM-2.jpg', name: 'Sinéad Minkah' },
+    { id: 4, image: 'https://i.postimg.cc/5NyZ52B8/Whats-App-Image-2025-10-22-at-4-23-50-PM.jpg', name: 'Sinéad Minkah' },
+    { id: 5, image: 'https://i.postimg.cc/qR7LfzMG/Whats-App-Image-2025-10-22-at-4-31-03-PM.jpg', name: 'Dr. Jayne Banful' },
+    { id: 6, image: 'https://i.postimg.cc/JzmjVGpW/Whats-App-Image-2025-10-22-at-4-23-49-PM.jpg', name: 'Rev. Lady Adjoa Abrefi' },
+    { id: 7, image: 'https://i.postimg.cc/Dy5w002S/Whats-App-Image-2025-10-22-at-4-23-49-PM-1.jpg', name: 'Dr. Jayne Banful' },
+    { id: 8, image: 'https://i.postimg.cc/LsjdqQzk/Whats-App-Image-2025-10-22-at-4-23-49-PM-2.jpg', name: 'Sinéad Minkah ' },
+    { id: 9, image: 'https://i.postimg.cc/5NyZ52B8/Whats-App-Image-2025-10-22-at-4-23-50-PM.jpg', name: 'Sinéad Minkah' },
+    { id: 10, image: 'https://i.postimg.cc/qR7LfzMG/Whats-App-Image-2025-10-22-at-4-31-03-PM.jpg', name: 'Dr. Jayne Banful' },
   ];
 
   // Create multiple copies for seamless infinite scroll
@@ -188,7 +188,7 @@ const animationRef = useRef<number>(0);
           {/* Header Text */}
           <div className="text-center">
             <h1 className="text-6xl md:text-7xl font-bold text-white mb-10">
-              Daughter's Conference
+              Daughters Conference 2K25
               {/* <span className="block bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
                 Registration
               </span> */}

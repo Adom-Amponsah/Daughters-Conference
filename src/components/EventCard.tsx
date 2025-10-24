@@ -1,7 +1,6 @@
 import React from 'react';
-import { Calendar, MapPin, Clock, ArrowRight } from 'lucide-react';
-import { RegistrationStepper } from "./RegistrationStepper";
-import type { StepperMode } from "@/components/RegistrationStepper";
+import { Calendar, Clock, ArrowRight } from 'lucide-react';
+import { ConferenceRegistrationForm } from "./DNBRegistrationForm";
 
 interface EventCardProps {
   title: string;
@@ -92,15 +91,15 @@ const EventCard: React.FC<EventCardProps> = ({
 
 // Main Component with both cards
 const EventRegistrationCards: React.FC = () => {
-  const [showStepper, setShowStepper] = React.useState<false | StepperMode>(false);
+  const [showRegistration, setShowRegistration] = React.useState(false);
 
   const handleNewRegistration = () => {
-    setShowStepper("register");
+    setShowRegistration(true);
   };
   
-  const handleExistingUser = () => {
-    setShowStepper("login");
-  };
+  // const handleExistingUser = () => {
+  //   setShowRegistration(true);
+  // };
 
   return (
     <>
@@ -109,16 +108,16 @@ const EventRegistrationCards: React.FC = () => {
           <EventCard
             title="Register"
             subtitle="Now"
-            date="15 Dec"
-            time="2:00 PM GMT"
-            venue="Innovation Hub"
-            address="40 Classical Rd, London NW1 8LS, United Kingdom"
+            date="1 Now"
+            time="7:00 AM GMT"
+            venue="Revival City"
+            address="Revival City - Haatso - MangoLane"
             imageUrl="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800"
             gradientFrom="from-blue-500/80"
             gradientTo="to-cyan-400/80"
             onClick={handleNewRegistration}
           />
-          <EventCard
+          {/* <EventCard
             title="Already"
             subtitle="Registered"
             date="15 Dec"
@@ -129,11 +128,11 @@ const EventRegistrationCards: React.FC = () => {
             gradientFrom="from-rose-500/80"
             gradientTo="to-orange-500/80"
             onClick={handleExistingUser}
-          />
+          /> */}
         </div>
       </div>
-      {showStepper && (
-        <RegistrationStepper mode={showStepper} onClose={() => setShowStepper(false)} />
+      {showRegistration && (
+        <ConferenceRegistrationForm onClose={() => setShowRegistration(false)} />
       )}
     </>
   );
