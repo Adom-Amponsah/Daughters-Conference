@@ -57,7 +57,11 @@ const LandingPage: React.FC = () => {
         {polaroidPhotos.map((photo) => (
           <div
             key={photo.id}
-            className="absolute w-[80vw] h-[90vh] bg-white p-8 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02]"
+            className="absolute 
+              w-[95vw] h-[70vh] md:w-[85vw] md:h-[80vh] lg:w-[80vw] lg:h-[90vh] 
+              bg-white 
+              p-3 md:p-6 lg:p-8 
+              shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02]"
             style={{
               ...photo.position,
               transform: `rotate(${photo.rotation})`,
@@ -65,14 +69,16 @@ const LandingPage: React.FC = () => {
           >
             {/* Photo */}
             <div 
-              className="w-full h-[75vh] bg-cover bg-center rounded-lg"
+              className="w-full 
+                h-[55vh] md:h-[65vh] lg:h-[75vh] 
+                bg-cover bg-center rounded-lg"
               style={{
                 backgroundImage: `url(${photo.image})`,
               }}
             />
             {/* White bottom space like real polaroid */}
-            <div className="h-[10vh] bg-white flex items-center justify-center">
-              <div className="w-32 h-2 bg-gray-200 rounded-full"></div>
+            <div className="h-[10vh] md:h-[10vh] lg:h-[10vh] bg-white flex items-center justify-center">
+              <div className="w-16 md:w-24 lg:w-32 h-1 md:h-1.5 lg:h-2 bg-gray-200 rounded-full"></div>
             </div>
           </div>
         ))}
@@ -93,6 +99,15 @@ const LandingPage: React.FC = () => {
       {/* Decorative Elements */}
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500 rounded-full blur-3xl opacity-20 -mb-48 -ml-48" />
       <div className="absolute top-1/4 right-0 w-96 h-96 bg-pink-500 rounded-full blur-3xl opacity-20 -mr-48" />
+      
+      {/* Secret Admin Button */}
+      <button
+        onClick={() => window.location.href = '/admin'}
+        className="fixed bottom-4 right-4 w-12 h-12 bg-gray-800 hover:bg-gray-700 text-white rounded-full flex items-center justify-center opacity-30 hover:opacity-100 transition-all duration-300 z-50"
+        title="Admin Panel"
+      >
+        <span className="text-xs font-bold">A</span>
+      </button>
     </div>
   );
 };

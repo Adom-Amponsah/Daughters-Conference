@@ -184,10 +184,10 @@ const animationRef = useRef<number>(0);
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-600/20 via-transparent to-transparent" />
         
-        <div className="relative z-10 w-full px-0 pt-20 pb-32">
+        <div className="relative z-10 w-full px-4 md:px-8 lg:px-0 pt-12 md:pt-16 lg:pt-20 pb-16 md:pb-24 lg:pb-32">
           {/* Header Text */}
           <div className="text-center">
-            <h1 className="text-6xl md:text-7xl font-bold text-white mb-10">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 md:mb-8 lg:mb-10 leading-tight">
               Daughters Conference 2K25
               {/* <span className="block bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
                 Registration
@@ -197,7 +197,7 @@ const animationRef = useRef<number>(0);
 
           {/* Draggable Arch Carousel */}
           <div 
-            className="relative h-96 overflow-hidden select-none"
+            className="relative h-64 md:h-80 lg:h-96 overflow-hidden select-none"
             style={{ 
               cursor: isDragging ? 'grabbing' : 'grab',
             }}
@@ -210,7 +210,7 @@ const animationRef = useRef<number>(0);
             onTouchEnd={handleTouchEnd}
           >
             <div 
-              className="flex items-center gap-6"
+              className="flex items-center gap-3 md:gap-4 lg:gap-6"
               style={{ 
                 transform: `translateX(-${offset - currentDragOffset}px)`,
                 willChange: 'transform',
@@ -223,13 +223,13 @@ const animationRef = useRef<number>(0);
                     key={`${member.id}-${index}`}
                     className="flex-shrink-0 group"
                     style={{ 
-                      width: '160px',
+                      width: window.innerWidth < 768 ? '120px' : window.innerWidth < 1024 ? '140px' : '160px',
                       height: `${height}px`,
                       transition: 'height 0.3s ease-out',
                     }}
                   >
                     <div className="relative w-full h-full">
-                      <div className="w-full h-full rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl transform transition-transform group-hover:scale-105">
+                      <div className="w-full h-full rounded-xl md:rounded-2xl overflow-hidden border-2 md:border-4 border-white/20 shadow-2xl transform transition-transform group-hover:scale-105">
                         <img
                           src={member.image}
                           alt={member.name}

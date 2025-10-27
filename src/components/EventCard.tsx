@@ -30,7 +30,7 @@ const EventCard: React.FC<EventCardProps> = ({
   return (
     <div 
       onClick={onClick}
-      className="relative w-110 h-96 rounded-3xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group"
+      className="relative w-full sm:w-80 md:w-96 lg:w-110 h-80 sm:h-88 md:h-96 rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group"
     >
       {/* Background Image */}
       <div 
@@ -44,32 +44,32 @@ const EventCard: React.FC<EventCardProps> = ({
       />
       
       {/* Content */}
-      <div className="relative h-full flex flex-col justify-between p-6 text-white">
+      <div className="relative h-full flex flex-col justify-between p-4 md:p-6 text-white">
         {/* Title Section */}
         <div>
-          <h2 className="text-4xl font-bold leading-tight mb-1">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight mb-1">
             {title}
           </h2>
           {subtitle && (
-            <h3 className="text-3xl font-semibold opacity-95">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold opacity-95">
               {subtitle}
             </h3>
           )}
         </div>
         
         {/* Info Card */}
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 text-gray-800 shadow-lg">
-          <div className="flex items-start gap-3 mb-3">
-            <div className="bg-white rounded-lg p-2 shadow-md flex-shrink-0">
-              <Calendar className="w-5 h-5 text-rose-500" />
+        <div className="bg-white/95 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-4 text-gray-800 shadow-lg">
+          <div className="flex items-start gap-2 md:gap-3 mb-2 md:mb-3">
+            <div className="bg-white rounded-lg p-1.5 md:p-2 shadow-md flex-shrink-0">
+              <Calendar className="w-4 h-4 md:w-5 md:h-5 text-rose-500" />
               <div className="text-center mt-1">
-                <div className="text-xl font-bold leading-none">{date.split(' ')[0]}</div>
+                <div className="text-lg md:text-xl font-bold leading-none">{date.split(' ')[0]}</div>
                 <div className="text-xs uppercase">{date.split(' ')[1]}</div>
               </div>
             </div>
             
             <div className="flex-1 min-w-0">
-              <h4 className="font-bold text-sm mb-1">{venue}</h4>
+              <h4 className="font-bold text-xs md:text-sm mb-1">{venue}</h4>
               <p className="text-xs text-gray-600 leading-tight mb-2">{address}</p>
               
               <div className="flex items-center gap-1 text-xs">
@@ -103,8 +103,8 @@ const EventRegistrationCards: React.FC = () => {
 
   return (
     <>
-      <div className="w-full py-4 px-2">
-        <div className="max-w-4xl mx-auto flex flex-wrap justify-center gap-4">
+      <div className="w-full py-4 px-4 md:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row justify-center gap-4 md:gap-6">
           <EventCard
             title="Register"
             subtitle="Now"

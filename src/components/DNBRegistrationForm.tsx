@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, X, CheckCircle, Loader2, PartyPopper, Heart } from "lucide-react";
+import { Check, X, CheckCircle, Loader2, PartyPopper, Heart, Download, Wifi, WifiOff } from "lucide-react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import { useRegistration } from "../hooks/useRegistration";
+import { useOfflineRegistration } from "../hooks/useOfflineRegistration";
 import {
   Form,
   FormField,
@@ -120,24 +120,13 @@ const stepVariants: Variants = {
   }
 };
 
-const sidebarItemVariants: Variants = {
-  hidden: { opacity: 0, x: -20 },
-  visible: (i: number) => ({
-    opacity: 1,
-    x: 0,
-    transition: {
-      delay: i * 0.1,
-      duration: 0.3,
-      ease: "easeOut"
-    }
-  })
-};
 
 export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProps> = ({ onClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const { submitRegistration, isLoading, error, clearError } = useRegistration();
+  const [registrationResult, setRegistrationResult] = useState<any>(null);
+  const { submitRegistration, exportRegistrations, getStats, isLoading, error, isOnline, clearError } = useOfflineRegistration();
 
   const form = useForm({
     resolver: zodResolver(conferenceRegistrationSchema),
@@ -237,6 +226,7 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
       const result = await submitRegistration(registrationData);
       
       if (result.success) {
+        setRegistrationResult(result);
         setShowSuccessModal(true);
       }
       // Error handling is done by the hook and displayed in the UI
@@ -263,126 +253,134 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
 
   return (
     <motion.div 
-      className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-2 md:p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
     >
       <motion.div 
-        className="bg-white rounded-lg shadow-2xl w-full max-w-6xl h-[90vh] flex overflow-hidden"
+        className="bg-white rounded-xl md:rounded-2xl shadow-2xl w-full max-w-sm sm:max-w-2xl md:max-w-4xl lg:max-w-6xl h-[95vh] md:h-[90vh] flex flex-col overflow-hidden"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
       >
-        {/* Left Sidebar */}
-        <div className="w-80 bg-gray-50 p-8 flex flex-col">
-          {/* Conference Logo */}
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-purple-600">GRM</h1>
-            <p className="text-sm text-gray-600 mt-1">Women's Conference</p>
+        {/* Top Horizontal Stepper */}
+        <div className="bg-gray-50 p-4 md:p-6 border-b border-gray-200">
+          {/* Conference Logo & Title */}
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-lg md:text-xl font-bold text-purple-600">GRM Women's Conference</h1>
+              <div className="flex items-center gap-2">
+                <p className="text-xs md:text-sm text-gray-600">Event Registration</p>
+                {/* Connection Status */}
+                <div className="flex items-center gap-1">
+                  {isOnline ? (
+                    <Wifi className="w-3 h-3 text-green-500" />
+                  ) : (
+                    <WifiOff className="w-3 h-3 text-orange-500" />
+                  )}
+                  <span className="text-xs text-gray-500">
+                    {isOnline ? 'Online' : 'Offline'}
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Action Buttons */}
+            <div className="flex items-center gap-2">
+              {/* Export Button */}
+              {getStats().canExport && (
+                <button
+                  onClick={() => {
+                    const result = exportRegistrations();
+                    if (result.success) {
+                      alert(result.message);
+                    }
+                  }}
+                  className="flex items-center gap-1 px-2 py-1 text-xs bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors"
+                  title="Export registrations to Excel"
+                >
+                  <Download className="w-3 h-3" />
+                  <span className="hidden md:inline">Export ({getStats().totalRegistrations})</span>
+                </button>
+              )}
+              
+              {/* Close Button */}
+              <button
+                onClick={onClose}
+                className="text-gray-400 hover:text-gray-600 z-10"
+              >
+                <X className="w-5 h-5 md:w-6 md:h-6" />
+              </button>
+            </div>
           </div>
 
-          {/* Registration Title */}
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-900">Event Registration</h2>
-          </div>
-
-          {/* Steps */}
-          <div className="flex-1">
+          {/* Horizontal Steps */}
+          <div className="flex items-center justify-center md:justify-between">
             {steps.map((step, index) => {
               const status = getStepStatus(step.id);
               return (
-                <motion.div 
-                  key={step.id} 
-                  className="flex items-start mb-6"
-                  variants={sidebarItemVariants}
-                  initial="hidden"
-                  animate="visible"
-                  custom={index}
-                >
-                  {/* Step Number/Icon */}
-                  <div className="flex flex-col items-center mr-4">
-                    <motion.div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                        status === "completed"
-                          ? "bg-purple-600 text-white"
-                          : status === "current"
-                          ? "bg-purple-600 text-white"
-                          : "bg-gray-300 text-gray-600"
-                      }`}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                    >
-                      {status === "completed" ? (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          transition={{ delay: 0.2, type: "spring", stiffness: 500 }}
-                        >
-                          <Check className="w-4 h-4" />
-                        </motion.div>
-                      ) : (
-                        step.id
-                      )}
-                    </motion.div>
-                    {index < steps.length - 1 && (
+                <div key={step.id} className="flex items-center">
+                  {/* Step Circle */}
+                  <motion.div 
+                    className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
+                      status === 'completed' 
+                        ? 'bg-purple-600 border-purple-600' 
+                        : status === 'current'
+                        ? 'bg-purple-100 border-purple-600'
+                        : 'bg-gray-100 border-gray-300'
+                    }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {status === 'completed' ? (
                       <motion.div
-                        className={`w-0.5 h-8 mt-2 ${
-                          status === "completed" ? "bg-purple-600" : "bg-gray-300"
-                        }`}
-                        initial={{ scaleY: 0 }}
-                        animate={{ scaleY: 1 }}
-                        transition={{ delay: index * 0.1 + 0.3, duration: 0.3 }}
-                        style={{ originY: 0 }}
-                      />
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.2 }}
+                      >
+                        <Check className="w-4 h-4 md:w-5 md:h-5 text-white" />
+                      </motion.div>
+                    ) : (
+                      <span className={`text-xs md:text-sm font-semibold ${
+                        status === 'current' ? 'text-purple-600' : 'text-gray-500'
+                      }`}>
+                        {step.id}
+                      </span>
                     )}
-                  </div>
-
-                  {/* Step Label */}
-                  <div className="pt-1">
-                    <span
-                      className={`text-sm ${
-                        status === "current"
-                          ? "font-semibold text-gray-900"
-                          : status === "completed"
-                          ? "text-gray-700"
-                          : "text-gray-500"
-                      }`}
-                    >
+                  </motion.div>
+                  
+                  {/* Step Label - Hidden on Mobile */}
+                  <div className="ml-2 md:ml-3 flex-1 hidden md:block">
+                    <h3 className={`text-sm font-medium transition-colors duration-300 ${
+                      status === 'current' ? 'text-purple-600' : 
+                      status === 'completed' ? 'text-gray-900' : 'text-gray-500'
+                    }`}>
                       {step.label}
-                    </span>
+                    </h3>
                   </div>
-                </motion.div>
+                  
+                  {/* Connecting Line */}
+                  {index < steps.length - 1 && (
+                    <motion.div 
+                      className="h-0.5 bg-gray-200 w-8 md:w-16 lg:w-24 mx-2 md:mx-4"
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: completedSteps.includes(step.id) ? 1 : 0.3 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                    />
+                  )}
+                </div>
               );
             })}
           </div>
-
-          {/* Visit Site Link */}
-          <div className="mt-auto">
-            <a
-              href="#"
-              className="text-sm text-purple-600 hover:text-purple-700 font-medium"
-            >
-              Visit GRM
-            </a>
-          </div>
         </div>
 
-        {/* Right Content Area */}
-        <div className={`flex-1 p-8 overflow-y-auto flex flex-col ${currentStep <= 3 ? 'justify-center' : 'justify-start'}`}>
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            className="absolute right-6 top-6 text-gray-400 hover:text-gray-600"
-          >
-            <X className="w-6 h-6" />
-          </button>
-
+        {/* Main Content Area */}
+        <div className={`flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto flex flex-col ${currentStep <= 3 ? 'justify-center' : 'justify-start'}`}>
           {/* Form Content */}
-          <div className="max-w-2xl mx-auto w-full">
+          <div className="max-w-full md:max-w-2xl mx-auto w-full">
             <AnimatePresence mode="wait">
               {/* Step 1: Personal Information */}
               {currentStep === 1 && (
@@ -902,7 +900,7 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
         exit={{ opacity: 0 }}
       >
         <motion.div
-          className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 text-center shadow-2xl"
+          className="bg-white rounded-xl md:rounded-2xl p-6 md:p-8 max-w-sm md:max-w-md w-full mx-4 text-center shadow-2xl"
           initial={{ scale: 0.8, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.8, opacity: 0, y: 20 }}
@@ -910,7 +908,7 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
         >
           {/* Success Animation */}
           <motion.div
-            className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"
+            className="w-16 h-16 md:w-20 md:h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 500 }}
@@ -920,12 +918,12 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
               animate={{ scale: 1 }}
               transition={{ delay: 0.4, type: "spring", stiffness: 400 }}
             >
-              <CheckCircle className="w-10 h-10 text-green-600" />
+              <CheckCircle className="w-8 h-8 md:w-10 md:h-10 text-green-600" />
             </motion.div>
           </motion.div>
 
           {/* Celebration Icons */}
-          <div className="flex justify-center space-x-4 mb-6">
+          <div className="flex justify-center space-x-3 md:space-x-4 mb-4 md:mb-6">
             <motion.div
               animate={{ rotate: [0, 15, -15, 0] }}
               transition={{ repeat: Infinity, duration: 2, delay: 0.5 }}
@@ -961,8 +959,37 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
             <p className="text-lg font-semibold text-purple-600 mb-4">
               GRM Women's Conference 2K25
             </p>
+            
+            {/* Status Message */}
+            {registrationResult && (
+              <div className={`p-3 rounded-lg mb-4 ${
+                registrationResult.isOffline 
+                  ? 'bg-orange-50 border border-orange-200' 
+                  : 'bg-green-50 border border-green-200'
+              }`}>
+                <div className="flex items-center gap-2 mb-1">
+                  {registrationResult.isOffline ? (
+                    <WifiOff className="w-4 h-4 text-orange-600" />
+                  ) : (
+                    <Wifi className="w-4 h-4 text-green-600" />
+                  )}
+                  <span className={`text-sm font-medium ${
+                    registrationResult.isOffline ? 'text-orange-700' : 'text-green-700'
+                  }`}>
+                    {registrationResult.isOffline ? 'Saved Offline' : 'Saved Online'}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-600">
+                  {registrationResult.message}
+                </p>
+              </div>
+            )}
+            
             <p className="text-sm text-gray-500 mb-6">
-              We're excited to see you there! You'll receive a confirmation email shortly.
+              {registrationResult?.isOffline 
+                ? 'Your registration is saved locally. Data will sync when online.' 
+                : 'We\'re excited to see you there! You\'ll receive a confirmation email shortly.'
+              }
             </p>
           </motion.div>
 
