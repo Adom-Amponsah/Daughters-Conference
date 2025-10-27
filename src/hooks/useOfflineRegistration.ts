@@ -3,8 +3,7 @@ import {
   saveRegistrationOffline, 
   checkEmailExistsOffline, 
   exportToExcel,
-  getRegistrationCount,
-  type RegistrationData 
+  getRegistrationCount
 } from '../lib/offlineStorage';
 import { registrationService } from '../lib/supabase';
 
