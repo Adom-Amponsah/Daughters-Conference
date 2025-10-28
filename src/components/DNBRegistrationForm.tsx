@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, X, CheckCircle, Loader2, PartyPopper, Heart, Download, Wifi, WifiOff } from "lucide-react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import { useOfflineRegistration } from "../hooks/useOfflineRegistration";
+import { useRegistration } from "../hooks/useRegistration";
 import {
   Form,
   FormField,
@@ -144,7 +144,7 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [registrationResult, setRegistrationResult] = useState<any>(null);
-  const { submitRegistration, exportRegistrations, getStats, isLoading, error, isOnline, clearError } = useOfflineRegistration();
+  const { submitRegistration, isLoading, error, clearError } = useRegistration();
 
   const form = useForm({
     resolver: zodResolver(conferenceRegistrationSchema),
@@ -171,6 +171,7 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
         case 1:
           await step1Schema.parseAsync({
             fullName: values.fullName,
+            hasEmail: values.hasEmail,
             email: values.email,
             phoneNumber: values.phoneNumber,
             age: values.age,
@@ -296,37 +297,14 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
                 <p className="text-xs md:text-sm text-gray-600">Event Registration</p>
                 {/* Connection Status */}
                 <div className="flex items-center gap-1">
-                  {isOnline ? (
-                    <Wifi className="w-3 h-3 text-green-500" />
-                  ) : (
-                    <WifiOff className="w-3 h-3 text-orange-500" />
-                  )}
-                  <span className="text-xs text-gray-500">
-                    {isOnline ? 'Online' : 'Offline'}
-                  </span>
+                  <Wifi className="w-3 h-3 text-green-500" />
+                  <span className="text-xs text-gray-500">Online</span>
                 </div>
               </div>
             </div>
             
             {/* Action Buttons */}
             <div className="flex items-center gap-2">
-              {/* Export Button */}
-              {getStats().canExport && (
-                <button
-                  onClick={() => {
-                    const result = exportRegistrations();
-                    if (result.success) {
-                      alert(result.message);
-                    }
-                  }}
-                  className="flex items-center gap-1 px-2 py-1 text-xs bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors"
-                  title="Export registrations to Excel"
-                >
-                  <Download className="w-3 h-3" />
-                  <span className="hidden md:inline">Export ({getStats().totalRegistrations})</span>
-                </button>
-              )}
-              
               {/* Close Button */}
               <button
                 onClick={onClose}
@@ -456,12 +434,11 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
                                 <label className="flex items-center gap-2 cursor-pointer">
                                   <input
                                     type="radio"
+                                    name="hasEmail"
                                     checked={field.value === true}
                                     onChange={() => {
                                       field.onChange(true);
-                                      if (!field.value) {
-                                        form.setValue("email", "");
-                                      }
+                                      form.setValue("email", "");
                                     }}
                                     className="w-4 h-4 text-purple-600"
                                   />
@@ -470,6 +447,7 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
                                 <label className="flex items-center gap-2 cursor-pointer">
                                   <input
                                     type="radio"
+                                    name="hasEmail"
                                     checked={field.value === false}
                                     onChange={() => {
                                       field.onChange(false);
@@ -1035,21 +1013,11 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
             
             {/* Status Message */}
             {registrationResult && (
-              <div className={`p-3 rounded-lg mb-4 ${
-                registrationResult.isOffline 
-                  ? 'bg-orange-50 border border-orange-200' 
-                  : 'bg-green-50 border border-green-200'
-              }`}>
+              <div className="p-3 rounded-lg mb-4 bg-green-50 border border-green-200">
                 <div className="flex items-center gap-2 mb-1">
-                  {registrationResult.isOffline ? (
-                    <WifiOff className="w-4 h-4 text-orange-600" />
-                  ) : (
-                    <Wifi className="w-4 h-4 text-green-600" />
-                  )}
-                  <span className={`text-sm font-medium ${
-                    registrationResult.isOffline ? 'text-orange-700' : 'text-green-700'
-                  }`}>
-                    {registrationResult.isOffline ? 'Saved Offline' : 'Saved Online'}
+                  <Wifi className="w-4 h-4 text-green-600" />
+                  <span className="text-sm font-medium text-green-700">
+                    Saved Online
                   </span>
                 </div>
                 <p className="text-xs text-gray-600">
@@ -1059,10 +1027,7 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
             )}
             
             <p className="text-sm text-gray-500 mb-6">
-              {registrationResult?.isOffline 
-                ? 'Your registration is saved locally. Data will sync when online.' 
-                : 'We\'re excited to see you here! You\'ll receive a confirmation email shortly.'
-              }
+              We're excited to see you here! You'll receive a confirmation email shortly.
             </p>
           </motion.div>
 
