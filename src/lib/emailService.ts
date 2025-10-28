@@ -83,23 +83,23 @@ class EmailService {
   }
 
   // Create custom message based on registration details
-  private createCustomMessage(data: RegistrationFormData): string {
-    let message = `Dear ${data.fullName},\n\nThank you for registering for the Daughters & Builders Conference 2025!\n\n`;
+  // private createCustomMessage(data: RegistrationFormData): string {
+  //   let message = `Dear ${data.fullName},\n\nThank you for registering for the Daughters & Builders Conference 2025!\n\n`;
     
-    if (data.isGrmMember) {
-      message += `We're excited to have you as a GRM member from ${data.grmBranch} branch.\n\n`;
-    } else {
-      message += `We're excited to have you representing ${data.churchName}.\n\n`;
-    }
+  //   if (data.isGrmMember) {
+  //     message += `We're excited to have you as a GRM member from ${data.grmBranch} branch.\n\n`;
+  //   } else {
+  //     message += `We're excited to have you representing ${data.churchName}.\n\n`;
+  //   }
     
-    if (data.wantsToExhibit) {
-      message += `🎪 EXHIBITION: You've registered to exhibit! We'll contact you soon with exhibition details.\n\n`;
-    }
+  //   if (data.wantsToExhibit) {
+  //     message += `🎪 EXHIBITION: You've registered to exhibit! We'll contact you soon with exhibition details.\n\n`;
+  //   }
     
-    message += `Please save this email as your registration confirmation.\n\nSee you at the conference!\n\nBlessings,\nDaughters & Builders Conference Team`;
+  //   message += `Please save this email as your registration confirmation.\n\nSee you at the conference!\n\nBlessings,\nDaughters & Builders Conference Team`;
     
-    return message;
-  }
+  //   return message;
+  // }
 
   // Send event reminder email (for later use)
   async sendEventReminder(email: string, name: string): Promise<EmailResult> {

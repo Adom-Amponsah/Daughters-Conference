@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, X, CheckCircle, Loader2, PartyPopper, Heart, Download, Wifi, WifiOff } from "lucide-react";
+import { Check, X, CheckCircle, Loader2, PartyPopper, Heart, Wifi } from "lucide-react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { useRegistration } from "../hooks/useRegistration";
 import {
