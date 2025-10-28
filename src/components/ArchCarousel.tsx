@@ -12,18 +12,18 @@ const ArchCarousel: React.FC = () => {
   const lastDragTime = useRef(Date.now());
   const lastDragX = useRef(0);
 const animationRef = useRef<number>(0);  
-  // Team member images
+  // Team member images - using local speaker images
   const teamMembers = [
-    { id: 1, image: 'https://i.postimg.cc/JzmjVGpW/Whats-App-Image-2025-10-22-at-4-23-49-PM.jpg', name: 'Rev. Lady Adjoa Abrefi' },
-    { id: 2, image: 'https://i.postimg.cc/Dy5w002S/Whats-App-Image-2025-10-22-at-4-23-49-PM-1.jpg', name: 'Dr. Jayne Banful' },
-    { id: 3, image: 'https://i.postimg.cc/LsjdqQzk/Whats-App-Image-2025-10-22-at-4-23-49-PM-2.jpg', name: 'Sinéad Minkah' },
-    { id: 4, image: 'https://i.postimg.cc/5NyZ52B8/Whats-App-Image-2025-10-22-at-4-23-50-PM.jpg', name: 'Sinéad Minkah' },
-    { id: 5, image: 'https://i.postimg.cc/qR7LfzMG/Whats-App-Image-2025-10-22-at-4-31-03-PM.jpg', name: 'Dr. Jayne Banful' },
-    { id: 6, image: 'https://i.postimg.cc/JzmjVGpW/Whats-App-Image-2025-10-22-at-4-23-49-PM.jpg', name: 'Rev. Lady Adjoa Abrefi' },
-    { id: 7, image: 'https://i.postimg.cc/Dy5w002S/Whats-App-Image-2025-10-22-at-4-23-49-PM-1.jpg', name: 'Dr. Jayne Banful' },
-    { id: 8, image: 'https://i.postimg.cc/LsjdqQzk/Whats-App-Image-2025-10-22-at-4-23-49-PM-2.jpg', name: 'Sinéad Minkah ' },
-    { id: 9, image: 'https://i.postimg.cc/5NyZ52B8/Whats-App-Image-2025-10-22-at-4-23-50-PM.jpg', name: 'Sinéad Minkah' },
-    { id: 10, image: 'https://i.postimg.cc/qR7LfzMG/Whats-App-Image-2025-10-22-at-4-31-03-PM.jpg', name: 'Dr. Jayne Banful' },
+    { id: 1, image: '/images/speakers/mama01.jpeg', name: 'Rev. Lady Adjoa Abrefi' },
+    { id: 2, image: '/images/speakers/revJayne01.jpeg', name: 'Dr. Jayne Banful' },
+    { id: 3, image: '/images/speakers/revJayne02.jpeg', name: 'Dr. Jayne Banful' },
+    { id: 4, image: '/images/speakers/preachers01.jpeg', name: 'Conference Speakers' },
+    { id: 5, image: '/images/speakers/preachers02.jpeg', name: 'Conference Speakers' },
+    { id: 6, image: '/images/speakers/mama01.jpeg', name: 'Rev. Lady Adjoa Abrefi' },
+    { id: 7, image: '/images/speakers/revJayne01.jpeg', name: 'Dr. Jayne Banful' },
+    { id: 8, image: '/images/speakers/revJayne02.jpeg', name: 'Dr. Jayne Banful' },
+    { id: 9, image: '/images/speakers/preachers01.jpeg', name: 'Conference Speakers' },
+    { id: 10, image: '/images/speakers/preachers02.jpeg', name: 'Conference Speakers' },
   ];
 
   // Create multiple copies for seamless infinite scroll
@@ -228,21 +228,18 @@ const animationRef = useRef<number>(0);
                       transition: 'height 0.3s ease-out',
                     }}
                   >
-                    <div className="relative w-full h-full">
-                      <div className="w-full h-full rounded-xl md:rounded-2xl overflow-hidden border-2 md:border-4 border-white/20 shadow-2xl transform transition-transform group-hover:scale-105">
-                        <img
-                          src={member.image}
-                          alt={member.name}
-                          className="w-full h-full object-cover"
-                          draggable="false"
-                        />
-                      </div>
-                      <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                        <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
-                          <p className="text-sm font-semibold text-gray-800 whitespace-nowrap">
-                            {member.name}
-                          </p>
-                        </div>
+                    <div className="w-full h-full bg-white rounded-lg shadow-lg overflow-hidden group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        className="w-full h-full object-cover rounded-lg"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+                        <p className="text-white text-xs font-medium truncate">
+                          {member.name}
+                        </p>
                       </div>
                     </div>
                   </div>

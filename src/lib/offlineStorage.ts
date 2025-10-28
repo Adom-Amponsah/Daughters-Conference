@@ -5,7 +5,8 @@ export interface RegistrationData {
   id: string;
   timestamp: string;
   fullName: string;
-  email: string;
+  hasEmail: boolean;
+  email?: string;
   phoneNumber: string;
   age: string;
   isGrmMember: boolean;
@@ -66,7 +67,8 @@ export const exportToExcel = () => {
       'Registration ID': reg.id,
       'Timestamp': new Date(reg.timestamp).toLocaleString(),
       'Full Name': reg.fullName,
-      'Email': reg.email,
+      'Has Email': reg.hasEmail ? 'Yes' : 'No',
+      'Email': reg.hasEmail && reg.email ? reg.email : 'N/A',
       'Phone Number': reg.phoneNumber,
       'Age': reg.age,
       'GRM Member': reg.isGrmMember ? 'Yes' : 'No',
@@ -117,7 +119,7 @@ export const getRegistrationCount = (): number => {
 // Check if email exists offline
 export const checkEmailExistsOffline = (email: string): boolean => {
   const registrations = getOfflineRegistrations();
-  return registrations.some(reg => reg.email.toLowerCase() === email.toLowerCase());
+  return registrations.some(reg => reg.email && reg.email.toLowerCase() === email.toLowerCase());
 };
 
 // Generate unique ID

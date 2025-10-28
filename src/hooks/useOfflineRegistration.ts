@@ -9,7 +9,8 @@ import { registrationService } from '../lib/supabase';
 
 export interface RegistrationFormData {
   fullName: string;
-  email: string;
+  hasEmail: boolean;
+  email?: string;
   phoneNumber: string;
   age: string;
   isGrmMember: boolean;
@@ -44,13 +45,13 @@ export const useOfflineRegistration = () => {
     setError(null);
 
     try {
-      // Check if email already exists offline
-      if (checkEmailExistsOffline(formData.email)) {
+      // Check if email already exists offline (only if they have email)
+      if (formData.hasEmail && formData.email && checkEmailExistsOffline(formData.email)) {
         throw new Error('This email is already registered offline');
       }
 
       // Try online first if we think we're online
-      if (isOnline) {
+      if (isOnline && formData.hasEmail && formData.email) {
         try {
           // Check online email existence
           const emailCheck = await registrationService.checkEmailExists(formData.email);
@@ -63,10 +64,10 @@ export const useOfflineRegistration = () => {
             throw new Error('This email is already registered online');
           }
 
-          // Try to save online
+          // Try to save online (only if email exists)
           const registrationData = {
             full_name: formData.fullName,
-            email: formData.email,
+            email: formData.email || '', // Provide empty string if no email
             phone_number: formData.phoneNumber,
             age: formData.age,
             is_grm_member: formData.isGrmMember,

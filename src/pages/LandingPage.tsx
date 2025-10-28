@@ -7,37 +7,25 @@ import ArchCarousel from '../components/ArchCarousel';
 const polaroidPhotos = [
   {
     id: 1,
-    image: "https://i.postimg.cc/ZKgQ3kHj/Whats-App-Image-2025-10-23-at-2-09-00-PM-1.jpg",
-    rotation: "-8deg",
-    position: { top: "-10%", left: "-15%" }
+    image: "/images/landing01.jpeg",
+    rotation: "-3deg",
+    position: { top: "5%", left: "-20%" }
   },
   {
     id: 2,
-    image: "https://i.postimg.cc/J7YYVwfK/Whats-App-Image-2025-10-23-at-2-09-00-PM.jpg",
-    rotation: "12deg",
-    position: { top: "-20%", right: "-20%" }
+    image: "/images/landing02.jpeg",
+    rotation: "2deg",
+    position: { top: "15%", right: "-25%" }
   },
   {
     id: 3,
-    image: "https://i.postimg.cc/LsjdqQzk/Whats-App-Image-2025-10-22-at-4-23-49-PM-2.jpg",
-    rotation: "-15deg",
-    position: { bottom: "-25%", left: "-10%" }
+    image: "/images/landing03.jpeg",
+    rotation: "-5deg",
+    position: { bottom: "10%", left: "-30%" }
   },
   {
     id: 4,
-    image: "https://i.postimg.cc/R00GbXgW/Whats-App-Image-2025-10-23-at-2-09-01-PM.jpg",
-    rotation: "18deg",
-    position: { bottom: "-30%", right: "-25%" }
-  },
-  {
-    id: 5,
-    image: "https://i.postimg.cc/R00GbXgW/Whats-App-Image-2025-10-23-at-2-09-01-PM.jpg",
-    rotation: "-10deg",
-    position: { top: "20%", left: "-30%" }
-  },
-  {
-    id: 6,
-    image: "https://i.postimg.cc/J7YYVwfK/Whats-App-Image-2025-10-23-at-2-09-00-PM.jpg",
+    image: "/images/landing04.jpeg",
     rotation: "6deg",
     position: { top: "10%", right: "-35%" }
   }
@@ -71,11 +59,16 @@ const LandingPage: React.FC = () => {
             <div 
               className="w-full 
                 h-[55vh] md:h-[65vh] lg:h-[75vh] 
-                bg-cover bg-center rounded-lg"
-              style={{
-                backgroundImage: `url(${photo.image})`,
-              }}
-            />
+                bg-gray-200 rounded-lg overflow-hidden relative"
+            >
+              <img
+                src={photo.image}
+                alt="Conference"
+                className="w-full h-full object-cover rounded-lg"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
             {/* White bottom space like real polaroid */}
             <div className="h-[10vh] md:h-[10vh] lg:h-[10vh] bg-white flex items-center justify-center">
               <div className="w-16 md:w-24 lg:w-32 h-1 md:h-1.5 lg:h-2 bg-gray-200 rounded-full"></div>

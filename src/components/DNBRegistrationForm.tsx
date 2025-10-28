@@ -26,9 +26,18 @@ import {
 // Step-specific validation schemas
 const step1Schema = z.object({
   fullName: z.string().min(2, { message: "Full name is required" }),
-  email: z.string().email({ message: "Valid email address is required" }),
+  hasEmail: z.boolean(),
+  email: z.string().optional(),
   phoneNumber: z.string().min(10, { message: "Phone number is required" }),
   age: z.string().min(1, { message: "Age is required" }),
+}).refine((data) => {
+  if (data.hasEmail && (!data.email || !z.string().email().safeParse(data.email).success)) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Please provide a valid email address",
+  path: ["email"],
 });
 
 const step2Schema = z.object({
@@ -64,7 +73,8 @@ const step3Schema = z.object({
 // Complete form schema for final validation
 const conferenceRegistrationSchema = z.object({
   fullName: z.string().min(2, { message: "Full name is required" }),
-  email: z.string().email({ message: "Valid email address is required" }),
+  hasEmail: z.boolean(),
+  email: z.string().optional(),
   phoneNumber: z.string().min(8, { message: "Phone number is required" }),
   age: z.string().min(1, { message: "Age is required" }),
   grmBranch: z.string().optional(),
@@ -72,6 +82,14 @@ const conferenceRegistrationSchema = z.object({
   isGrmMember: z.boolean(),
   wantsToExhibit: z.boolean(),
   exhibitionDescription: z.string().optional(),
+}).refine((data) => {
+  if (data.hasEmail && (!data.email || !z.string().email().safeParse(data.email).success)) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Please provide a valid email address",
+  path: ["email"],
 });
 
 interface ConferenceRegistrationFormProps {
@@ -133,12 +151,13 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
     mode: "onChange",
     defaultValues: {
       fullName: "",
+      hasEmail: false,
       email: "",
       phoneNumber: "",
       age: "",
       grmBranch: "",
       churchName: "",
-      isGrmMember: true,
+      isGrmMember: false,
       wantsToExhibit: false,
       exhibitionDescription: "",
     },
@@ -213,6 +232,7 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
       
       const registrationData = {
         fullName: formValues.fullName,
+        hasEmail: formValues.hasEmail,
         email: formValues.email,
         phoneNumber: formValues.phoneNumber,
         age: formValues.age,
@@ -421,28 +441,80 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
                       />
                     </div>
 
-                    {/* Email and Phone */}
-                    <div className="grid grid-cols-2 gap-4 mb-6">
+                    {/* Email Question */}
+                    <div className="mb-6">
                       <FormField
                         control={form.control}
-                        name="email"
+                        name="hasEmail"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel className="text-sm text-gray-600">
-                              Email Address
+                              Do you have an email address?
                             </FormLabel>
                             <FormControl>
-                              <Input
-                                type="email"
-                                placeholder="your.email@example.com"
-                                className="mt-1"
-                                {...field}
-                              />
+                              <div className="flex gap-4 mt-2">
+                                <label className="flex items-center gap-2 cursor-pointer">
+                                  <input
+                                    type="radio"
+                                    checked={field.value === true}
+                                    onChange={() => {
+                                      field.onChange(true);
+                                      if (!field.value) {
+                                        form.setValue("email", "");
+                                      }
+                                    }}
+                                    className="w-4 h-4 text-purple-600"
+                                  />
+                                  <span className="text-sm">Yes</span>
+                                </label>
+                                <label className="flex items-center gap-2 cursor-pointer">
+                                  <input
+                                    type="radio"
+                                    checked={field.value === false}
+                                    onChange={() => {
+                                      field.onChange(false);
+                                      form.setValue("email", "");
+                                    }}
+                                    className="w-4 h-4 text-purple-600"
+                                  />
+                                  <span className="text-sm">No</span>
+                                </label>
+                              </div>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
+                    </div>
+
+                    {/* Conditional Email Field */}
+                    {form.watch("hasEmail") && (
+                      <div className="mb-6">
+                        <FormField
+                          control={form.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm text-gray-600">
+                                Email Address
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="email"
+                                  placeholder="your.email@example.com"
+                                  className="mt-1"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )}
+
+                    {/* Phone */}
+                    <div className="mb-6">
                       <FormField
                         control={form.control}
                         name="phoneNumber"
@@ -453,6 +525,7 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
                             </FormLabel>
                             <FormControl>
                               <Input
+                                type="tel"
                                 placeholder="Enter your phone number"
                                 className="mt-1"
                                 {...field}
@@ -988,7 +1061,7 @@ export const ConferenceRegistrationForm: React.FC<ConferenceRegistrationFormProp
             <p className="text-sm text-gray-500 mb-6">
               {registrationResult?.isOffline 
                 ? 'Your registration is saved locally. Data will sync when online.' 
-                : 'We\'re excited to see you there! You\'ll receive a confirmation email shortly.'
+                : 'We\'re excited to see you here! You\'ll receive a confirmation email shortly.'
               }
             </p>
           </motion.div>
